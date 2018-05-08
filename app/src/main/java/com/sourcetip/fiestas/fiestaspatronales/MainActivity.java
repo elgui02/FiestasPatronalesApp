@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -57,12 +56,21 @@ public class MainActivity extends AppCompatActivity {
         list = (ListView)findViewById(R.id.list);
         new JsonTask().execute("");
 
+        final Intent intent = new Intent(this, FiestaActivity.class);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 try {
                     JSONObject fclick = obj.getJSONObject(i);
-                    Log.d("adapter", fclick.getString("id"));
+                    intent.putExtra("nombre",fclick.getString("_nombre"));
+                    intent.putExtra("municipio",fclick.getJSONObject("municipio").getString("_municipio"));
+                    intent.putExtra("departamento",fclick.getJSONObject("municipio").getJSONObject("departamento").getString("_departamento"));
+                    intent.putExtra("fecha",fclick.getString("_fecha") );
+                    intent.putExtra("lat",fclick.getDouble("_latitud"));
+                    intent.putExtra("lon",fclick.getDouble("_longitud"));
+                    intent.putExtra("descripcion",fclick.getString("_descripcion"));
+                    startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
