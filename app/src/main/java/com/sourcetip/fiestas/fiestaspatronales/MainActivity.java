@@ -36,17 +36,18 @@ public class MainActivity extends AppCompatActivity {
     //String[] itemname ={};
     ArrayList<String> itemname = new ArrayList<String>();
     JSONArray obj;
-
     ListView list;
+    String ln;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Fiestas patronales");
         setSupportActionBar(toolbar);
 
         SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
-        String ln = sharedPref.getString("lang","");
+        ln = sharedPref.getString("lang","es");
 
         if( ln.isEmpty() )
         {
@@ -77,14 +78,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final Intent intentD = new Intent(this, DepartamentoActivity.class);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //new ConnectServer().execute();
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(intentD);
             }
         });
     }
@@ -127,7 +127,7 @@ private class JsonTask extends AsyncTask<String, String, String> {
 
     protected String doInBackground(String... params) {
 
-        String str="http://www.fiestas.sourcetip.com/rest/fiestaspatronales";
+        String str="http://www.fiestas.sourcetip.com/rest/fiestaspatronales/"+ln;
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 

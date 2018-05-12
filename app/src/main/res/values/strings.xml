@@ -77,4 +77,7 @@
     <string name="title_activity_settingsctivity">Settingsctivity</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_fiesta">FiestaActivity</string>
+    <string name="title_activity_departamento">DepartamentoActivity</string>
+    <string name="title_activity_municipio">MunicipioActivity</string>
+    <string name="title_activity_fiesta_municipio">FiestaMunicipioActivity</string>
 </resources>

@@ -139,8 +139,8 @@ public class Settingsctivity extends AppCompatActivity {
     spinner.setAdapter(spinnerArrayAdapter);
 
     }
-    @Override
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
