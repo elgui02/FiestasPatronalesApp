@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -31,31 +32,30 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class FiestaMunicipioActivity extends AppCompatActivity {
-
+public class Main2Activity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     ArrayList<String> itemname = new ArrayList<String>();
     JSONArray obj;
     ListView list;
     String ln;
-    Bundle b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fiesta_municipio);
+        setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        b = getIntent().getExtras();
-        toolbar.setTitle(b.getString("nombre"));
-
+        toolbar.setTitle("Fiestas patronales");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         ln = sharedPref.getString("lang","es");
 
+        if( ln.isEmpty() )
+        {
+            Intent intent = new Intent(this, Settingsctivity.class);
+            startActivity(intent);
+        }
         list = (ListView)findViewById(R.id.list);
         new JsonTask().execute("");
 
@@ -79,16 +79,47 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
                 }
             }
         });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_settings)
+        {
+            Intent intent = new Intent(this, Settingsctivity.class);
+            startActivity(intent);
+        }
+        else if( id == R.id.nav_departamentos)
+        {
+            Intent intentD = new Intent(this, DepartamentoActivity.class);
+            startActivity(intentD);
         }
 
-        return super.onOptionsItemSelected(item);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
@@ -97,7 +128,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(FiestaMunicipioActivity.this);
+            pd = new ProgressDialog(Main2Activity.this);
             pd.setMessage("Please wait");
             pd.setCancelable(false);
             pd.show();
@@ -105,8 +136,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
 
         protected String doInBackground(String... params) {
 
-            String str="http://www.fiestas.sourcetip.com/rest/municipio/"+b.getString("id")+"/fiestapatronal/"+ln;
-            Log.d("url",str);
+            String str="http://www.fiestas.sourcetip.com/rest/fiestaspatronales/"+ln;
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -163,7 +193,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
                 obj = new JSONArray(json);
                 for (int x = 0; x < obj.length(); x++) {
                     JSONObject fiesta = obj.getJSONObject(x);
-                    itemname.add(fiesta.getString("_nombre"));
+                    itemname.add(fiesta.getString("_nombre")+"\n"+fiesta.getJSONObject("municipio").get("_municipio"));
                     Log.d("My App", fiesta.getString("_nombre"));
                 }
 
@@ -176,7 +206,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
 
             String[] lstFiestas = itemname.toArray(new String[itemname.size()]);
 
-            list.setAdapter(new ArrayAdapter<String>(FiestaMunicipioActivity.this,
+            list.setAdapter(new ArrayAdapter<String>(Main2Activity.this,
                     R.layout.fiesta_list,
                     R.id.Itemname,lstFiestas
             ));

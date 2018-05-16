@@ -160,7 +160,7 @@ public class Settingsctivity extends AppCompatActivity {
         editor.putString("lang", ln.getCode());
         editor.commit();
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
         finish();
     }
