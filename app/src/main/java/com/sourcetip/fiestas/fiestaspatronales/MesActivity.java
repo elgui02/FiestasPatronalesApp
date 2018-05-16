@@ -6,20 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,36 +30,44 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MesActivity extends AppCompatActivity {
 
+    Spinner spinner;
+    SharedPreferences sharedPref;
+    int month;
     ArrayList<String> itemname = new ArrayList<String>();
     JSONArray obj;
     ListView list;
     String ln;
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
+        setContentView(R.layout.activity_mes);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         ln = sharedPref.getString("lang","es");
-        toolbar.setTitle(sharedPref.getString("principal", "Fiestas patronales Guatemala"));
-
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        if( ln.isEmpty() )
+        spinner = (Spinner)this.findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter;
+        List<String> meses;
+
+        meses = new ArrayList<String>();
+        for(int x = 1; x<=12; x++)
         {
-            Intent intent = new Intent(this, Settingsctivity.class);
-            startActivity(intent);
+            meses.add(sharedPref.getString(String.valueOf(x),String.valueOf(x)));
         }
-        list = (ListView)findViewById(R.id.list);
-        new JsonTask().execute("");
 
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, meses);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        list = (ListView)findViewById(R.id.list);
         final Intent intent = new Intent(this, FiestaActivity.class);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,57 +88,21 @@ public class Main2Activity extends AppCompatActivity
                 }
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        navigationView.setNavigationItemSelectedListener(this);
-
-        Menu menu = navigationView.getMenu();
-        MenuItem nav_departamentos = menu.findItem(R.id.nav_departamentos);
-        nav_departamentos.setTitle(sharedPref.getString("departamentos","Departamentos"));
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_settings)
-        {
-            Intent intent = new Intent(this, Settingsctivity.class);
-            startActivity(intent);
-        }
-        else if( id == R.id.nav_departamentos)
-        {
-            Intent intentD = new Intent(this, DepartamentoActivity.class);
-            startActivity(intentD);
-        }
-        else if( id == R.id.nav_fecha )
-        {
-            Intent intentM = new Intent(this, MesActivity.class);
-            startActivity(intentM);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void search(View view) {
+        month = spinner.getSelectedItemPosition()+1;
+        new JsonTask().execute("");
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
@@ -142,7 +111,7 @@ public class Main2Activity extends AppCompatActivity
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(Main2Activity.this);
+            pd = new ProgressDialog(MesActivity.this);
             pd.setMessage("Please wait");
             pd.setCancelable(false);
             pd.show();
@@ -150,7 +119,7 @@ public class Main2Activity extends AppCompatActivity
 
         protected String doInBackground(String... params) {
 
-            String str="http://www.fiestas.sourcetip.com/rest/fiestaspatronales/"+ln;
+            String str="http://www.fiestas.sourcetip.com/rest/fiestaspatronales/"+String.valueOf(month)+"/mes/"+ln;
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -220,10 +189,11 @@ public class Main2Activity extends AppCompatActivity
 
             String[] lstFiestas = itemname.toArray(new String[itemname.size()]);
 
-            list.setAdapter(new ArrayAdapter<String>(Main2Activity.this,
+            list.setAdapter(new ArrayAdapter<String>(MesActivity.this,
                     R.layout.fiesta_list,
                     R.id.Itemname,lstFiestas
             ));
         }
     }
+
 }

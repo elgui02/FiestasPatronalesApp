@@ -146,7 +146,7 @@ private class JsonTask extends AsyncTask<String, String, String> {
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line+"\n");
-                //Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+                //Log.d("Response: ", "> " + line);   dd//here u ll get whole response...... :-)
 
             }
 
@@ -185,16 +185,12 @@ private class JsonTask extends AsyncTask<String, String, String> {
             for (int x = 0; x < obj.length(); x++) {
                 JSONObject fiesta = obj.getJSONObject(x);
                 itemname.add(fiesta.getString("_nombre")+"\n"+fiesta.getJSONObject("municipio").get("_municipio"));
-                Log.d("My App", fiesta.getString("_nombre"));
             }
 
 
         } catch (Throwable tx) {
             Log.e("My App", tx.toString());
         }
-        Log.e("array size","text");
-        Log.d("array size",String.valueOf(itemname.size()));
-
         String[] lstFiestas = itemname.toArray(new String[itemname.size()]);
 
         list.setAdapter(new ArrayAdapter<String>(MainActivity.this,
