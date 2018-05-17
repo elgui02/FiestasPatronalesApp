@@ -97,6 +97,12 @@ public class Main2Activity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
         MenuItem nav_departamentos = menu.findItem(R.id.nav_departamentos);
         nav_departamentos.setTitle(sharedPref.getString("departamentos","Departamentos"));
+
+        MenuItem nav_fecha = menu.findItem(R.id.nav_fecha);
+        nav_fecha.setTitle(sharedPref.getString("fecha","fecha"));
+
+        MenuItem nav_set = menu.findItem(R.id.nav_settings);
+        nav_set.setTitle(sharedPref.getString("preferencias","preferencias"));
     }
 
     @Override

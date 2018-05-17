@@ -48,6 +48,8 @@ public class MesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         ln = sharedPref.getString("lang","es");
+
+        toolbar.setTitle(sharedPref.getString("fecha","Busqueda por mes"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -184,9 +186,6 @@ public class MesActivity extends AppCompatActivity {
             } catch (Throwable tx) {
                 Log.e("My App", tx.toString());
             }
-            Log.e("array size","text");
-            Log.d("array size",String.valueOf(itemname.size()));
-
             String[] lstFiestas = itemname.toArray(new String[itemname.size()]);
 
             list.setAdapter(new ArrayAdapter<String>(MesActivity.this,

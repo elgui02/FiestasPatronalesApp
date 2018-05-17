@@ -1,7 +1,9 @@
 package com.sourcetip.fiestas.fiestaspatronales;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +40,8 @@ public class DepartamentoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_departamento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
+        toolbar.setTitle(sharedPref.getString("departamentos","Busqueda por departamento"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

@@ -25,17 +25,19 @@ public class FiestaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fiesta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        final Bundle b = getIntent().getExtras();
+
+        toolbar.setTitle(b.getString("nombre"));
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        final Bundle b = getIntent().getExtras();
-        TextView txtFiesta = (TextView) findViewById(R.id.fiesta);
+        //TextView txtFiesta = (TextView) findViewById(R.id.fiesta);
         TextView txtMunicipio = (TextView) findViewById(R.id.municipio);
         TextView txtFecha = (TextView) findViewById(R.id.fecha);
         TextView txtDesc = (TextView) findViewById(R.id.desc);
-
-        txtFiesta.setText(b.getString("nombre"));
 
         txtMunicipio.setText(b.getString("municipio")+" - "+b.getString("departamento"));
         txtFecha.setText(b.getString("fecha"));

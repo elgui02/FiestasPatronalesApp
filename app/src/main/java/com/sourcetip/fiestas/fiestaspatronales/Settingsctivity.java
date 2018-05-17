@@ -36,6 +36,7 @@ public class Settingsctivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settingsctivity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Configuration");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -256,6 +257,9 @@ public class Settingsctivity extends AppCompatActivity {
                 ln = lng.getCode();
                 editor.putString("principal", obj.getString("principal"));
                 editor.putString("departamentos", obj.getString("departamentos"));
+                editor.putString("fecha",obj.getString("fecha"));
+                editor.putString("buscar",obj.getString("buscar"));
+                editor.putString("preferencias",obj.getString("preferencias"));
                 for(int x=1;x<=12;x++)
                 {
                     editor.putString(String.valueOf(x),obj.getJSONObject("meses").getString(String.valueOf(x)));
