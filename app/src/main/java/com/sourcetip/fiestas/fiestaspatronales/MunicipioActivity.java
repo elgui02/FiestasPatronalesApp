@@ -1,7 +1,9 @@
 package com.sourcetip.fiestas.fiestaspatronales;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +38,7 @@ public class MunicipioActivity extends AppCompatActivity {
     JSONArray obj;
     ListView list;
     String ln;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MunicipioActivity extends AppCompatActivity {
 
         b = getIntent().getExtras();
         toolbar.setTitle(b.getString("nombre"));
-
+        sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -87,7 +90,7 @@ public class MunicipioActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd = new ProgressDialog(MunicipioActivity.this);
-            pd.setMessage("Please wait");
+            pd.setMessage(sharedPref.getString("espere","Please wait"));
             pd.setCancelable(false);
             pd.show();
         }

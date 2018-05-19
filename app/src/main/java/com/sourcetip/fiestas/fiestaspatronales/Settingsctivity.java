@@ -260,6 +260,11 @@ public class Settingsctivity extends AppCompatActivity {
                 editor.putString("fecha",obj.getString("fecha"));
                 editor.putString("buscar",obj.getString("buscar"));
                 editor.putString("preferencias",obj.getString("preferencias"));
+                editor.putString("hoy",obj.getString("hoy"));
+                editor.putString("info",obj.getString("info"));
+                editor.putString("espere", obj.getString("espere"));
+                editor.putString("team",obj.getString("team"));
+                editor.putString("desc", obj.getString("desc"));
                 for(int x=1;x<=12;x++)
                 {
                     editor.putString(String.valueOf(x),obj.getJSONObject("meses").getString(String.valueOf(x)));

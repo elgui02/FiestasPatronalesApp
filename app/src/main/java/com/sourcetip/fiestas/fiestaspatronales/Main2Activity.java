@@ -32,7 +32,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +45,7 @@ public class Main2Activity extends AppCompatActivity
     ListView list;
     String ln;
     Toolbar toolbar;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +53,15 @@ public class Main2Activity extends AppCompatActivity
         setContentView(R.layout.activity_main2);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
-        ln = sharedPref.getString("lang","es");
+        sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
+        ln = sharedPref.getString("lang","");
         toolbar.setTitle(sharedPref.getString("principal", "Fiestas patronales Guatemala"));
+
+        TextView txtHoy = (TextView)findViewById(R.id.hoy);
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(currentTime);
+        txtHoy.setText(sharedPref.getString("hoy", "Fiestas patronales de hoy")+": "+formattedDate);
 
         setSupportActionBar(toolbar);
 
@@ -103,6 +113,9 @@ public class Main2Activity extends AppCompatActivity
 
         MenuItem nav_set = menu.findItem(R.id.nav_settings);
         nav_set.setTitle(sharedPref.getString("preferencias","preferencias"));
+
+        MenuItem nav_about = menu.findItem(R.id.nav_about);
+        nav_about.setTitle(sharedPref.getString("info","Acerca de"));
     }
 
     @Override
@@ -136,6 +149,11 @@ public class Main2Activity extends AppCompatActivity
             Intent intentM = new Intent(this, MesActivity.class);
             startActivity(intentM);
         }
+        else if( id == R.id.nav_about)
+        {
+            Intent intentA = new Intent(this, CreditsActivity.class);
+            startActivity(intentA);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -149,7 +167,7 @@ public class Main2Activity extends AppCompatActivity
             super.onPreExecute();
 
             pd = new ProgressDialog(Main2Activity.this);
-            pd.setMessage("Please wait");
+            pd.setMessage(sharedPref.getString("espere","Please wait"));
             pd.setCancelable(false);
             pd.show();
         }

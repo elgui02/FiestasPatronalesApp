@@ -39,6 +39,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
     ListView list;
     String ln;
     Bundle b;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         ln = sharedPref.getString("lang","es");
 
         list = (ListView)findViewById(R.id.list);
@@ -98,7 +99,7 @@ public class FiestaMunicipioActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd = new ProgressDialog(FiestaMunicipioActivity.this);
-            pd.setMessage("Please wait");
+            pd.setMessage(sharedPref.getString("espere","Please wait"));
             pd.setCancelable(false);
             pd.show();
         }

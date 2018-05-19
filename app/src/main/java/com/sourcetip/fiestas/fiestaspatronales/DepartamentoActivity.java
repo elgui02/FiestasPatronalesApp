@@ -34,13 +34,13 @@ public class DepartamentoActivity extends AppCompatActivity {
     JSONArray obj;
     ListView list;
     String ln;
-
+    SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_departamento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        SharedPreferences sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE);
         toolbar.setTitle(sharedPref.getString("departamentos","Busqueda por departamento"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,7 +84,7 @@ public class DepartamentoActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd = new ProgressDialog(DepartamentoActivity.this);
-            pd.setMessage("Please wait");
+            pd.setMessage(sharedPref.getString("espere","Please wait"));
             pd.setCancelable(false);
             pd.show();
         }

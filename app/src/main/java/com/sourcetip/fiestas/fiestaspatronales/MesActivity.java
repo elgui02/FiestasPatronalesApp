@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -54,6 +55,9 @@ public class MesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        Button btn = (Button) findViewById(R.id.button2);
+        btn.setText(sharedPref.getString("buscar","search"));
+
         spinner = (Spinner)this.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter;
         List<String> meses;
@@ -64,7 +68,7 @@ public class MesActivity extends AppCompatActivity {
             meses.add(sharedPref.getString(String.valueOf(x),String.valueOf(x)));
         }
 
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
+        adapter = new ArrayAdapter<String>(getBaseContext(),
                 android.R.layout.simple_spinner_item, meses);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -114,7 +118,7 @@ public class MesActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd = new ProgressDialog(MesActivity.this);
-            pd.setMessage("Please wait");
+            pd.setMessage(sharedPref.getString("espere","Please wait"));
             pd.setCancelable(false);
             pd.show();
         }
